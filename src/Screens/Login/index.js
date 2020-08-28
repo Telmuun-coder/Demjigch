@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,12 +12,16 @@ import {
 import Input from '../../Components/Input';
 import Button from '../../Components/Button';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {AuthContext} from '../../Context/Auth';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Login = (props) => {
   const [rem, setRem] = useState(true);
+  const {login} = React.useContext(AuthContext);
+  const [number, setNumber] = useState('99882753');
+  const [password, setPassword] = useState('pass');
   return (
     <SafeAreaView style={styles.container}>
       <View style={{alignItems: 'center'}}>
@@ -65,7 +69,7 @@ const Login = (props) => {
       </View>
 
       <View>
-        <Button title="НЭВТРЭХ" onClick={() => props.submit('sda')} />
+        <Button title="НЭВТРЭХ" onClick={() => login(number, password)} />
       </View>
     </SafeAreaView>
   );

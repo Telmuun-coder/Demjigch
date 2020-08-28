@@ -8,61 +8,61 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import Member from '../../Components/Member';
+import Human from '../../Components/Human';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Members = () => {
+const Supporters = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#E51F1D" />
       <ScrollView style={{paddingHorizontal: 10}}>
         <View style={styles.row}>
-          <Member checked={true} />
-          <Member checked={true} />
-          <Member checked={true} />
+          <Human checked={true} />
+          <Human checked={true} />
+          <Human checked={true} />
         </View>
         <View style={styles.row}>
-          <Member checked={true} />
-          <Member checked={true} />
-          <Member checked={true} />
+          <Human checked={true} />
+          <Human checked={true} />
+          <Human checked={true} />
         </View>
         <View style={styles.row}>
-          <Member checked={true} />
-          <Member />
-          <Member />
+          <Human checked={true} />
+          <Human />
+          <Human />
         </View>
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
 
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
         <View style={styles.row}>
-          <Member />
-          <Member />
-          <Member />
+          <Human />
+          <Human />
+          <Human />
         </View>
         <View style={styles.footer} />
       </ScrollView>
@@ -70,7 +70,7 @@ const Members = () => {
   );
 };
 
-export default Members;
+export default Supporters;
 
 const styles = StyleSheet.create({
   container: {

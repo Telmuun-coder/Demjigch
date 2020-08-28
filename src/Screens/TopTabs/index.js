@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Members from '../Members';
-
+import Supporters from '../Supporters';
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = () => {
   return (
@@ -34,7 +34,7 @@ const TopTabs = () => {
       />
       <Tab.Screen
         name="Supports"
-        component={Members}
+        component={Supporters}
         options={{
           tabBarLabel: 'ДЭМЖИГЧИД',
         }}
