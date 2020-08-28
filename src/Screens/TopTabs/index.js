@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Members from '../Members';
-import Regions from '../Toirguud/Regions';
+import Supporters from '../Supporters';
 
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = () => {
@@ -35,14 +35,14 @@ const TopTabs = () => {
       />
       <Tab.Screen
         name="Supports"
-        component={Members}
+        component={Supporters}
         options={{
           tabBarLabel: 'ДЭМЖИГЧИД',
         }}
       />
       <Tab.Screen
-        name="Regions"
-        component={Regions}
+        name="Members"
+        component={Members}
         options={{
           tabBarLabel: 'ТОЙРГУУД',
         }}

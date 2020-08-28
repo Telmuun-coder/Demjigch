@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import 'react-native-gesture-handler';
 import {
   SafeAreaView,
@@ -20,13 +20,16 @@ import Splash from './src/Screens/Splash';
 import AddMember from './src/Screens/AddMember';
 import TopTabs from './src/Screens/TopTabs';
 import Login from './src/Screens/Login';
+import User from './src/Screens/User';
+import {AuthContext} from './src/Context/Auth';
 
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Members"
+      // initialRouteName="Members"
+      initialRouteName="AddMember"
       tabBarOptions={{
         activeTintColor: '#E51F1D',
         showLabel: false,
@@ -85,8 +88,8 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Mem"
-        component={Splash}
+        name="User"
+        component={User}
         options={{
           // tabBarBadge: 3,
           tabBarIcon: ({color, size}) => (
@@ -100,24 +103,48 @@ function MyTabs() {
 const stack = createStackNavigator();
 const App = () => {
   const [token, setToken] = useState(null);
+  const [showSplash, setShowSplash] = useState(true);
+  // const [loading, setLoader] = useState(true);
+  useEffect(() => {
+    setTimeout(() => setShowSplash(false), 1000);
+    // setTimeout(() => setUser({}), 1000);
+  }, []);
+  const auth = React.useMemo(
+    () => ({
+      login: (phoneNumber, password) => {
+        //console.warn(phoneNumber + ', ' + password);
+        setToken('sad');
+      },
+      logout: () => setToken(null), //console.warn('Logout'),
+    }),
+    [],
+  );
   return (
-    <NavigationContainer>
-      <stack.Navigator>
-        {token ? (
-          <stack.Screen
-            name="MyTabs"
-            component={MyTabs}
-            options={{headerShown: false}}
-          />
-        ) : (
-          <stack.Screen
-            name="Login"
-            component={() => <Login submit={setToken} />}
-            options={{headerShown: false}}
-          />
-        )}
-      </stack.Navigator>
-    </NavigationContainer>
+    <AuthContext.Provider value={auth}>
+      <NavigationContainer>
+        <stack.Navigator>
+          {showSplash ? (
+            <stack.Screen
+              name="Splash"
+              component={Splash}
+              options={{headerShown: false}}
+            />
+          ) : token ? (
+            <stack.Screen
+              name="MyTabs"
+              component={MyTabs}
+              options={{headerShown: false}}
+            />
+          ) : (
+            <stack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+          )}
+        </stack.Navigator>
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
 

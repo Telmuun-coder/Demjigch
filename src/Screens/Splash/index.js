@@ -1,14 +1,10 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
-import Button from '../../Components/Button';
-import Input from '../../Components/Input';
 
 const Splash = () => {
   return (
     <View style={styles.container}>
       <Image style={styles.img} source={require('../../Images/logoTom.png')} />
-      <Input title="Овог" />
-      <Button title="Сонгууль өгсөн" />
     </View>
   );
 };

@@ -19,12 +19,13 @@ const Input = (props) => {
         }}
         placeholder={props.placeHolder ? props.placeHolder : null}
         style={styles.input}
-        maxLength={props.type === 'number' ? 12 : 16}
+        maxLength={props.type === 'number' ? 12 : 100}
         autoCorrect={false}
         autoFocus={props.focus}
         value={val}
         keyboardType={props.type === 'number' ? 'phone-pad' : 'default'}
         secureTextEntry={props.type === 'password' ? true : false}
+        multiline={props.multiline ? true : null}
       />
     </View>
   );
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#FAFAFA',
     width: windowWidth * 0.7,
-    height: windowHeight * 0.065,
+    minHeight: windowHeight * 0.065,
     paddingTop: 3,
     paddingHorizontal: 20,
     borderRadius: 50,
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-    height: 30,
+    minHeight: 30,
     fontSize: 16,
     padding: 0,
     paddingBottom: 5,
