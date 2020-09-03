@@ -16,7 +16,7 @@ import Button from '../Button';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Mood = ({show, setShow}) => {
+const Mood = ({show, setShow, data, putData}) => {
   return (
     <Modal visible={show} transparent={true} onRequestClose={setShow}>
       <View style={styles.shadow} onStartShouldSetResponder={setShow} />
@@ -34,21 +34,18 @@ const Mood = ({show, setShow}) => {
             width: windowWidth,
           }}>
           <View style={{marginTop: 20}}>
-            <ProImg color="#FFFFFF" uri={null} />
+            <ProImg color="#FFFFFF" uri={data.imgPath} />
           </View>
-          <ViewInput title="Овог" text="Эрдэнэбат" />
-          <ViewInput title="Нэр" text="Даваадорж" />
-          <ViewInput title="Мэйл хаяг" text="davka@gmail.com" />
-          <ViewInput title="Утасны дугаар 1" text="9988 2231" />
-          <ViewInput title="Утасны дугаар 2" text="9988 2231" />
-          <ViewInput title="Твиттер хаяг" text="erdene davka" />
-          <ViewInput title="Фэйсбүүк хаяг" text="erdene davka" />
-          <ViewInput
-            title="Гэрийн хаяг"
-            text="Сүхбаатар дүүрэг 6-р хороо, 26-30 тоот"
-          />
+          <ViewInput title="Овог" text={data.firstName} />
+          <ViewInput title="Нэр" text={data.lastName} />
+          <ViewInput title="Мэйл хаяг" text={data.email} />
+          <ViewInput title="Утасны дугаар 1" text={data.phone} />
+          <ViewInput title="Утасны дугаар 2" text={data.phone} />
+          <ViewInput title="Твиттер хаяг" text={data.facebookName} />
+          <ViewInput title="Фэйсбүүк хаяг" text={data.facebookName} />
+          <ViewInput title="Гэрийн хаяг" text={data.address} />
           <View style={{marginBottom: 50}}>
-            <Button title="Сонгууль өгсөн" onClick={setShow} />
+            <Button title="Сонгууль өгсөн" onClick={putData} />
           </View>
         </ScrollView>
       </View>
@@ -62,6 +59,7 @@ const styles = StyleSheet.create({
   container: {
     // paddingTop: 30,
     // paddingBottom: 30,
+    overflow: 'hidden',
     zIndex: 100,
     marginTop: '5%',
     alignSelf: 'center',

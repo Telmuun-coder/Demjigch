@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '../../Components/Input';
 import Button from '../../Components/Button';
 import ProInmg from '../../Components/ProImg';
+import Picker from '../../Components/Picker';
+import {UserState} from '../../Context/UserStore';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,6 +28,10 @@ const tohirgoo = {
 
 const AddMember = () => {
   const [uri, setUri] = useState('a');
+  const [duureg, setDuureg] = useState('');
+  const [horoo, setHoroo] = useState('');
+  const [tolow, setTolow] = useState('');
+  const {state} = useContext(UserState);
 
   const getAvatar = () => {
     ImagePicker.showImagePicker(tohirgoo, (res) => {
@@ -63,12 +69,20 @@ const AddMember = () => {
             </>
           ) : (
             <ProInmg uri={uri} color="#F0F0F0" />
-            // <Image
-            //   style={{width: 40, height: 30, borderRadius: 5}}
-            //   source={{uri}}
-            // />
           )}
         </TouchableOpacity>
+        <View style={styles.item}>
+          {true && (
+            <Picker
+              title="Төлөв сонгох"
+              tolowSongodog={true}
+              tolow={tolow}
+              setTolow={(e) => {
+                setTolow(e);
+              }}
+            />
+          )}
+        </View>
         <View style={styles.item}>
           <Input title="Утасны дугаар 1" type="number" />
         </View>
@@ -90,13 +104,33 @@ const AddMember = () => {
         <View style={styles.item}>
           <Input title="Фэйсбүүк хаяг" type="" />
         </View>
+
+        <View style={styles.item}>
+          <Picker
+            title="Бүс нутаг сонгох"
+            duureg={duureg}
+            type="Duureg"
+            setDuureg={(e) => {
+              setDuureg(e);
+              console.log(e.areaName);
+            }}
+          />
+        </View>
+        <View style={styles.item}>
+          <Picker
+            title="Хороо"
+            horoo={horoo}
+            setHoroo={(e) => setHoroo(e)}
+            areaId={duureg.areaId}
+          />
+        </View>
         <View style={styles.item}>
           <Input title="Гэрийн хаяг" type="" multiline={true} />
         </View>
         <View style={styles.item}>
           <Button title="ХАДГАЛАХ" />
         </View>
-        <View style={{height: windowHeight * 0.065}} />
+        <View style={{height: windowHeight * 0.11}} />
       </ScrollView>
     </SafeAreaView>
   );

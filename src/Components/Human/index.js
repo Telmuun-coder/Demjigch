@@ -3,17 +3,47 @@ import {StyleSheet, Text, View, TouchableNativeFeedback} from 'react-native';
 import ProImg from '../ProImg';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Mood from '../Mood';
+import axios from 'axios';
 
 const Human = (props) => {
   const [show, setShow] = useState(false);
+  const [flag, setFlag] = useState(props.data.elPromoter.enableFlag);
+  const putData = () => {
+    const data = {
+      candidateId: props.data.candidateId,
+      promoterId: props.data.promoterId,
+      userId: props.data.userId,
+      electionId: props.data.electionId,
+      enableFlag: !props.data.enableFlag,
+    };
+    console.log('dsa', data);
+    let config = {
+      headers: {
+        headers: {'Content-Type': 'application/json'},
+      },
+    };
+    axios
+      .put('http://192.168.137.1:8081/election/elPromoter/update', data, config)
+      .then((res) => {
+        console.log('Flag: ', res.data);
+        setFlag(!flag);
+      })
+      .catch((e) => console.log('FlafError', e.message))
+      .finally(() => setShow(false));
+  };
   return (
     <TouchableNativeFeedback
       useForeground={false}
       background={TouchableNativeFeedback.Ripple('#5F5F5F')}
       onPress={() => setShow(true)}>
       <View style={styles.container}>
-        <Mood show={show} setShow={() => setShow(false)} />
-        {props.checked && (
+        <Mood
+          data={props.data.elPromoter}
+          show={show}
+          putData={putData}
+          setShow={() => setShow(false)}
+        />
+        {flag && (
           <Icon
             style={styles.check}
             name="checkcircle"
@@ -21,10 +51,18 @@ const Human = (props) => {
             size={24}
           />
         )}
-        <ProImg mini={true} color="#F0F0F0" uri={null} />
-        <Text style={styles.name}>Ц.Наранцэцэг</Text>
-        <Text style={styles.mail}>narantsetseg@gmail.com</Text>
-        <Text style={styles.num}>88982212</Text>
+        <ProImg
+          mini={true}
+          color="#F0F0F0"
+          uri={props.data.elPromoter.imgPath}
+        />
+        <Text style={styles.name}>
+          {props.data.elPromoter.firstName[0].toUpperCase() +
+            '. ' +
+            props.data.elPromoter.lastName.toUpperCase()}
+        </Text>
+        <Text style={styles.mail}>{props.data.elPromoter.email}</Text>
+        <Text style={styles.num}>{props.data.elPromoter.phone}</Text>
       </View>
     </TouchableNativeFeedback>
   );

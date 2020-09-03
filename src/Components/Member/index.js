@@ -5,14 +5,12 @@ import Liner from '../Liner';
 
 const Member = (props) => {
   return (
-    // <TouchableNativeFeedback
-    //   useForeground={false}
-    //   background={TouchableNativeFeedback.Ripple('#5F5F5F')}
-    //   onPress={() => setShow(true)}>
     <View style={styles.container}>
-      <ProImg mini={true} color="#F0F0F0" uri={null} />
-      <Text style={styles.name}>Ц.Наранцэцэг</Text>
-      <Liner />
+      <ProImg mini={true} color="#F0F0F0" uri={props.data.imgPath} />
+      <Text style={styles.name}>
+        {props.data.firstName[0].toUpperCase() + '. ' + props.data.lastName}
+      </Text>
+      <Liner red={props.data.promoterCnt} />
     </View>
     // </TouchableNativeFeedback>
   );

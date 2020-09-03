@@ -5,7 +5,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Input = (props) => {
-  const [val, setVal] = useState(props.value ? props.value : 'Эрдэнэбат');
+  const [val, setVal] = useState(props.value ? props.value : '');
   return (
     <View style={[styles.inputContainer, props.danger && styles.danger]}>
       <Text style={styles.type}>{props.title}</Text>

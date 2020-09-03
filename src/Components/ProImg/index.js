@@ -19,7 +19,7 @@ const ProImg = (props) => {
       <View style={[styles.topRight, {backgroundColor: props.color}]} />
       <View style={[styles.bottomLeft, {backgroundColor: props.color}]} />
       <View style={[styles.bottomRight, {backgroundColor: props.color}]} />
-      <Grayscale>
+      <Grayscale amount={0.9}>
         <Image
           style={[
             styles.img,

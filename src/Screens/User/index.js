@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import ProImg from '../../Components/ProImg';
 import {AuthContext} from '../../Context/Auth';
+import {UserState} from '../../Context/UserStore';
 import Button from '../../Components/Button';
 
 export const formater = (too) => {
@@ -26,7 +27,8 @@ export const formater = (too) => {
 };
 
 const User = () => {
-  const {logout} = useContext(AuthContext);
+  // const {logout} = useContext(AuthContext);
+  const {auth} = useContext(UserState);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContaner}>
@@ -69,7 +71,7 @@ const User = () => {
         </View>
       </View>
       <View style={{alignSelf: 'center', marginTop: 20}}>
-        <Button title="Гарах" onClick={logout} />
+        <Button title="Гарах" onClick={auth.logout} />
       </View>
     </SafeAreaView>
   );

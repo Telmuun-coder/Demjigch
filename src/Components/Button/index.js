@@ -11,6 +11,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Button = (props) => {
+  scaleInAnimated = new Animated.Value(0);
+  scaleOutAnimated = new Animated.Value(0);
   return (
     <TouchableHighlight
       disabled={props.disabled}

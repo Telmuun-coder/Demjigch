@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, Image, View, StatusBar} from 'react-native';
 
 const Splash = () => {
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#F0F0F0" />
       <Image style={styles.img} source={require('../../Images/logoTom.png')} />
     </View>
   );

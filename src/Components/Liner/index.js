@@ -8,14 +8,14 @@ const Liner = (props) => {
         <View
           style={[
             styles.range,
-            {backgroundColor: '#E51F1D', width: `${(125 / 500) * 100}%`},
+            {backgroundColor: '#E51F1D', width: `${(props.red / 10) * 100}%`},
           ]}
         />
       </View>
       <View style={styles.numContainer}>
-        <Text style={[styles.num, {color: '#E51F1D'}]}>125</Text>
+        <Text style={[styles.num, {color: '#E51F1D'}]}>{props.red}</Text>
         <Text style={styles.num}>/</Text>
-        <Text style={styles.num}>500</Text>
+        <Text style={styles.num}>10</Text>
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import React, {useMemo, useState, useEffect} from 'react';
+import React, {useMemo, useState, useEffect, useContext} from 'react';
 import 'react-native-gesture-handler';
 import {
   SafeAreaView,
@@ -8,6 +8,7 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FIcon from 'react-native-vector-icons/Feather';
@@ -22,6 +23,10 @@ import TopTabs from './src/Screens/TopTabs';
 import Login from './src/Screens/Login';
 import User from './src/Screens/User';
 import {AuthContext} from './src/Context/Auth';
+import UserStore, {UserState} from './src/Context/UserStore';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +36,7 @@ function MyTabs() {
       // initialRouteName="Members"
       initialRouteName="AddMember"
       tabBarOptions={{
+        style: {position: 'absolute', top: windowHeight * 0.905},
         activeTintColor: '#E51F1D',
         showLabel: false,
       }}>
@@ -68,9 +74,6 @@ function MyTabs() {
                 marginBottom: 30,
               }}>
               <View
-                // onPress={() => {
-                //   myref.listeners.tabPress();
-                // }}
                 style={{
                   backgroundColor: color,
                   width: 60,
@@ -102,49 +105,39 @@ function MyTabs() {
 }
 const stack = createStackNavigator();
 const App = () => {
-  const [token, setToken] = useState(null);
+  const {state} = useContext(UserState);
   const [showSplash, setShowSplash] = useState(true);
   // const [loading, setLoader] = useState(true);
   useEffect(() => {
     setTimeout(() => setShowSplash(false), 1000);
     // setTimeout(() => setUser({}), 1000);
   }, []);
-  const auth = React.useMemo(
-    () => ({
-      login: (phoneNumber, password) => {
-        //console.warn(phoneNumber + ', ' + password);
-        setToken('sad');
-      },
-      logout: () => setToken(null), //console.warn('Logout'),
-    }),
-    [],
-  );
   return (
-    <AuthContext.Provider value={auth}>
-      <NavigationContainer>
-        <stack.Navigator>
-          {showSplash ? (
-            <stack.Screen
-              name="Splash"
-              component={Splash}
-              options={{headerShown: false}}
-            />
-          ) : token ? (
-            <stack.Screen
-              name="MyTabs"
-              component={MyTabs}
-              options={{headerShown: false}}
-            />
-          ) : (
-            <stack.Screen
-              name="Login"
-              component={Login}
-              options={{headerShown: false}}
-            />
-          )}
-        </stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    // <AuthContext.Provider value={auth}>
+    <NavigationContainer>
+      <stack.Navigator>
+        {showSplash ? (
+          <stack.Screen
+            name="Splash"
+            component={Splash}
+            options={{headerShown: false}}
+          />
+        ) : state.token ? (
+          <stack.Screen
+            name="MyTabs"
+            component={MyTabs}
+            options={{headerShown: false}}
+          />
+        ) : (
+          <stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
+        )}
+      </stack.Navigator>
+    </NavigationContainer>
+    // </AuthContext.Provider>
   );
 };
 
