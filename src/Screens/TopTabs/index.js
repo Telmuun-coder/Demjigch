@@ -40,13 +40,13 @@ const TopTabs = () => {
           tabBarLabel: 'ДЭМЖИГЧИД',
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Members"
         component={Members}
         options={{
           tabBarLabel: 'ТОЙРГУУД',
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };
