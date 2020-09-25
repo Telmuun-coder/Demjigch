@@ -11,27 +11,37 @@ import {
 import ProgressCircle from 'react-native-progress-circle';
 import ProImg from '../ProImg';
 import {formater} from '../../Screens/User';
+import Icon from 'react-native-vector-icons/AntDesign';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Taniltsuulga = () => {
+const Delgerengui = ({navigation, data}) => {
   return (
     <View style={styles.cube}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('Supporters', {
+            candidateId: data.candidateId,
+          })
+        }
+        style={styles.jump}>
+        <Icon name="right" color="#787878" size={25} />
+      </TouchableOpacity>
       <View style={[styles.Dashed, {borderColor: '#Fff'}]}>
         <View style={styles.first}>
-          <ProImg mini={true} uri={null} color="#FFFFFF" />
+          <ProImg mini={true} uri={data.imgPath} color="#FFFFFF" />
           <View style={styles.About}>
             <View>
-              <Text style={styles.font1}>ДАВААЖАРГАЛ</Text>
+              <Text style={styles.font1}>{data.lastName}</Text>
             </View>
             <View>
               <Text style={styles.font2}>НИТХ-д нэр дэвшигч</Text>
-              <Text style={styles.font3}>88982212</Text>
+              <Text style={styles.font3}>{data.phone}</Text>
             </View>
           </View>
         </View>
       </View>
-      <View style={styles.Dashed}>
+      {/* <View style={styles.Dashed}>
         <View style={styles.first}>
           <ProgressCircle
             //props oor orluulah
@@ -41,10 +51,10 @@ const Taniltsuulga = () => {
             color="#EC1A21"
             shadowColor="#70707020"
             bgColor="#fff">
-              <View style={styles.inCircle}>
-                <Text style={styles.font7}>СОНГУУЛИЙН НАСНЫ ИРГЭД</Text>
-                <Text style={styles.font8}>{formater(4600)}</Text>
-                </View>
+            <View style={styles.inCircle}>
+              <Text style={styles.font7}>СОНГУУЛИЙН НАСНЫ ИРГЭД</Text>
+              <Text style={styles.font8}>{formater(46000)}</Text>
+            </View>
           </ProgressCircle>
           <View style={styles.twoColumn}>
             <View style={{marginLeft: 10}}>
@@ -57,28 +67,30 @@ const Taniltsuulga = () => {
             </View>
           </View>
         </View>
-      </View>
+      </View> */}
       <View style={[styles.Dashed, {borderColor: '#Fff'}]}>
         <View style={styles.first}>
           <ProgressCircle
             //props oor orluulah
-            percent={(2450 * 100) / 3800}
+            percent={(data.checkedCnt * 100) / data.promoterCnt}
             radius={50}
             borderWidth={6}
             color="#EC1A21"
             shadowColor="#70707020"
             bgColor="#fff">
             <Text style={styles.font7}>НИЙТ ДЭМЖИГЧИД</Text>
-            <Text style={styles.font8}>{formater(21400)}</Text>
+            <Text style={styles.font8}>{formater(data.promoterCnt)}</Text>
           </ProgressCircle>
           <View style={styles.twoColumn}>
             <View style={{marginLeft: 10}}>
               <Text style={styles.font4}>СОНГУУЛЬ ӨГСӨН</Text>
-              <Text style={styles.font5}>{formater(2450)}</Text>
+              <Text style={styles.font5}>{formater(data.checkedCnt)}</Text>
             </View>
             <View>
               <Text style={styles.font4}>СОНГУУЛЬ ӨГӨӨГҮЙ</Text>
-              <Text style={styles.font6}>{formater(1350)}</Text>
+              <Text style={styles.font6}>
+                {formater(data.promoterCnt - data.checkedCnt)}
+              </Text>
             </View>
           </View>
         </View>
@@ -86,7 +98,7 @@ const Taniltsuulga = () => {
     </View>
   );
 };
-export default Taniltsuulga;
+export default Delgerengui;
 const styles = StyleSheet.create({
   cube: {
     width: windowWidth * 0.9,
@@ -112,17 +124,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: '10.7%',
   },
   font1: {
-    fontSize: windowHeight * 0.019,
+    fontSize: 14,
   },
   font2: {
-    fontSize: windowHeight * 0.017,
+    fontSize: 10,
     color: '#00000050',
   },
   font3: {
-    fontSize: windowHeight * 0.018,
+    fontSize: 12,
   },
   font4: {
-    fontSize: windowHeight * 0.014,
+    fontSize: 8,
     color: '#00000050',
     width: windowHeight * 0.15,
     justifyContent: 'space-evenly',
@@ -140,12 +152,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   font7: {
-    fontSize: windowHeight * 0.013,
+    fontSize: 8,
     color: '#00000030',
     textAlign: 'center',
   },
   font8: {
-    fontSize: windowHeight * 0.028,
+    fontSize: 24,
     color: '#000000',
     textAlign: 'center',
     fontWeight: 'bold',
@@ -161,7 +173,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  inCircle:{
-    padding:3
-  }
+  inCircle: {
+    padding: 3,
+  },
+  jump: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+    // backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
 });

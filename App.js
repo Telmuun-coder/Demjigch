@@ -22,7 +22,7 @@ import AddMember from './src/Screens/AddMember';
 import TopTabs from './src/Screens/TopTabs';
 import Login from './src/Screens/Login';
 import User from './src/Screens/User';
-import {AuthContext} from './src/Context/Auth';
+import Spinner from './src/Components/Spinner';
 import UserStore, {UserState} from './src/Context/UserStore';
 
 const windowWidth = Dimensions.get('window').width;
@@ -36,7 +36,11 @@ function MyTabs() {
       // initialRouteName="Members"
       initialRouteName="AddMember"
       tabBarOptions={{
-        style: {position: 'absolute', top: windowHeight * 0.905},
+        style: {
+          // position: 'absolute',
+          // top: windowHeight * 0.905,
+          // bottom: 0,
+        },
         activeTintColor: '#E51F1D',
         showLabel: false,
       }}>
@@ -105,15 +109,11 @@ function MyTabs() {
 }
 const stack = createStackNavigator();
 const App = () => {
-  const {state} = useContext(UserState);
-  const [showSplash, setShowSplash] = useState(true);
-  // const [loading, setLoader] = useState(true);
-  useEffect(() => {
-    setTimeout(() => setShowSplash(false), 1000);
-    // setTimeout(() => setUser({}), 1000);
-  }, []);
+  const {state, showSplash} = useContext(UserState);
+  // useEffect(() => {
+  //   setTimeout(() => setShowSplash(false), 1000);
+  // }, []);
   return (
-    // <AuthContext.Provider value={auth}>
     <NavigationContainer>
       <stack.Navigator>
         {showSplash ? (
@@ -137,7 +137,6 @@ const App = () => {
         )}
       </stack.Navigator>
     </NavigationContainer>
-    // </AuthContext.Provider>
   );
 };
 

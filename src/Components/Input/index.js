@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Dimensions, TextInput} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -6,24 +6,39 @@ const windowHeight = Dimensions.get('window').height;
 
 const Input = (props) => {
   const [val, setVal] = useState(props.value ? props.value : '');
+  // const [red, setRed] = useState(props.danger);
+  // useEffect(() => {
+  //   setRed(props.danger);
+  // }, [props.danger]);
   return (
-    <View style={[styles.inputContainer, props.danger && styles.danger]}>
+    <View
+      style={[
+        styles.inputContainer,
+        // red && styles.danger
+      ]}>
       <Text style={styles.type}>{props.title}</Text>
       <TextInput
         // onFocus={() => {
         //   props.onChange(val);
         // }}
         onChangeText={(e) => {
-          // props.onChange(e);
+          props.onChange(e);
           setVal(e);
         }}
+        autoCapitalize={props.register && 'characters'}
         placeholder={props.placeHolder ? props.placeHolder : null}
         style={styles.input}
         maxLength={props.type === 'number' ? 12 : 100}
         autoCorrect={false}
         autoFocus={props.focus}
         value={val}
-        keyboardType={props.type === 'number' ? 'phone-pad' : 'default'}
+        keyboardType={
+          props.type === 'email'
+            ? 'email-address'
+            : props.type === 'number'
+            ? 'phone-pad'
+            : 'default'
+        }
         secureTextEntry={props.type === 'password' ? true : false}
         multiline={props.multiline ? true : null}
       />

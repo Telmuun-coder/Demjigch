@@ -1,61 +1,210 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState, useRef} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  StatusBar,
   SafeAreaView,
   Dimensions,
   ScrollView,
-  FlatList,
   TouchableOpacity,
+  TextInput,
+  Text,
+  RefreshControl,
+  FlatList,
 } from 'react-native';
 import Member from '../../Components/Member';
 import axios from 'axios';
 import Ficon from 'react-native-vector-icons/Feather';
 import {UserState} from '../../Context/UserStore';
+import Spinner from '../../Components/Spinner';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Members = (props) => {
+  const isMountedRef = useRef(null);
   const [data, setData] = useState([]);
+  const [result, setResult] = useState([]);
   const {state} = useContext(UserState);
-  const loadData = () => {
+  const [keyWord, setKeyWord] = useState('');
+  const [spin, setSpin] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isSearching, setIsSeartching] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const loadData = async (pageNum) => {
+    axios.defaults.headers.common = {
+      Authorization: `Bearer ${state.token}`,
+    };
+    // console.log('page', page);
+    const data = {
+      // committeeId: state.committeeId, neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+      page: pageNum,
+      // areaId: null,
+      // cityId: null,
+    };
+    pageNum === 1 && setSpin(true);
     axios
-      .post(
-        'http://192.168.137.1:8081/election/elUser/users',
-        state.candidateId,
-      )
+      .post('http://api.minu.mn/election/elUser/users', data)
       .then((res) => {
-        // console.log('mee', res.data.entity);
-        setData(res.data.entity);
+        if (res.data.message === 'Амжилттай') {
+          if (res.data.entity.length > 0)
+            setData((Prev) => [
+              ...Prev.slice(0, Prev.length - 3),
+              ...res.data.entity,
+              {blank: true},
+              {blank: true},
+              {blank: true},
+            ]);
+        }
       })
-      .catch((e) => console.log('aash', e.message));
+      .catch((e) => console.log('Members error:', e.message))
+      .finally(() => {
+        // pageNum === 1 ? setSpin(false) : setRefreshing(false);
+        setSpin(false);
+      });
   };
 
   useEffect(() => {
-    loadData();
+    isMountedRef.current = true;
+    loadData(1);
+    return () => (isMountedRef.current = false);
   }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setPage(1);
+    setIsSeartching(false);
+    setResult([]);
+    axios.defaults.headers.common = {
+      Authorization: `Bearer ${state.token}`,
+    };
+    const data = {
+      // committeeId: state.committeeId,
+      page: 1,
+    };
+    axios
+      .post('http://api.minu.mn/election/elUser/users', data)
+      .then((res) => {
+        // console.log('refreshing', res.data.entity.length);
+        if (res.data.message === 'Амжилттай') {
+          setData([]);
+          setData([...res.data.entity]);
+        }
+      })
+      .catch((e) => console.log('Members error:', e.message))
+      .finally(() => {
+        setRefreshing(false);
+      });
+  }, []);
+
+  const onEnd = () => {
+    // setRefreshing(true);
+    loadData(page + 1);
+    setPage((Prev) => Prev + 1);
+    // console.log('Are u challenging mee?');
+  };
+
+  const renderMember = ({item}) => {
+    return <Member data={item} />;
+  };
+
+  const doSearch = () => {
+    setSpin(true);
+    setIsSeartching(true);
+    axios.defaults.headers.common = {
+      Authorization: `Bearer ${state.token}`,
+    };
+    const data = {
+      // committeeId: state.committeeId,
+      searchValue: keyWord,
+    };
+    axios
+      .post('http://api.minu.mn/election/elUser/search', data)
+      .then((res) => {
+        if (res.data.message === 'Амжилттай') {
+          setResult([]);
+          setResult([...res.data.entity]);
+        } else {
+          if (res.data.entity.length === 0) {
+            setMessage(res.data.message);
+            setResult([]);
+          }
+        }
+      })
+      .catch((e) => console.log('Members error:', e.message))
+      .finally(() => {
+        setSpin(false);
+      });
+  };
+  const clearSearch = () => {
+    setKeyWord('');
+    setIsSeartching(false);
+    setResult([]);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#E51F1D" />
-
-      <ScrollView style={{paddingHorizontal: 10}}>
-        <TouchableOpacity
-          style={styles.search}
-          onPress={() => props.navigation.push('Search')}>
-          <Ficon name="search" size={windowWidth * 0.06} color="#9E9898" />
-          <Text style={{color: '#9E9898'}}>Хайх ...</Text>
+      {/* <StatusBar backgroundColor="#E51F1D" /> */}
+      <Spinner visible={spin} />
+      <View style={[styles.search, {backgroundColor: 'white'}]}>
+        <Ficon name="search" size={25} color="#9E9898" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Хайх ..."
+          value={keyWord}
+          onChangeText={(e) => {
+            setKeyWord(e);
+            if (e === '' || e == null) {
+              clearSearch();
+            }
+          }}
+          onSubmitEditing={() => keyWord != '' && doSearch()}
+        />
+        <TouchableOpacity onPress={() => clearSearch()}>
+          <Ficon name="x" size={30} color="#9E9898" />
         </TouchableOpacity>
-        <View style={styles.mapContainer}>
-          {data.map((e, i) => {
-            return <Member data={e} key={i} />;
-          })}
-        </View>
-        <View style={styles.footer} />
-      </ScrollView>
+      </View>
+      {isSearching ? (
+        result.length > 0 ? (
+          <FlatList
+            style={{
+              width: windowWidth * 0.95,
+            }}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+            columnWrapperStyle={{justifyContent: 'space-around'}}
+            numColumns={3}
+            data={result}
+            renderItem={renderMember}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        ) : (
+          <View
+            style={{
+              height: '95%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>{message}</Text>
+          </View>
+        )
+      ) : (
+        <FlatList
+          onRefresh={onRefresh}
+          refreshing={refreshing}
+          style={{
+            width: windowWidth * 0.95,
+          }}
+          columnWrapperStyle={{justifyContent: 'space-around'}}
+          numColumns={3}
+          data={data}
+          renderItem={renderMember}
+          keyExtractor={(item, index) => index.toString()}
+          onEndReached={onEnd}
+          onEndReachedThreshold={1} //!
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -95,9 +244,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginRight: 10,
     borderRadius: 20,
-    width: 70,
+    // minWidth: 150,
     height: 30,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+  },
+  searchInput: {
+    padding: 0,
+    // backgroundColor: 'red',
+    minWidth: 50,
+    height: 35,
   },
 });

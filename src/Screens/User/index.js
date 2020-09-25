@@ -1,9 +1,40 @@
-import React, {useContext} from 'react';
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import ProImg from '../../Components/ProImg';
-import {AuthContext} from '../../Context/Auth';
 import {UserState} from '../../Context/UserStore';
 import Button from '../../Components/Button';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+
+const roleNames = [
+  {
+    roleId: 1,
+    roleName: 'Super admin',
+  },
+  {
+    roleId: 2,
+    roleName: 'Admin',
+  },
+  {
+    roleId: 3,
+    roleName: 'Гишүүн',
+  },
+  {
+    roleId: 4,
+    roleName: 'Ухуулагч',
+  },
+  {
+    roleId: 5,
+    roleName: 'Нэр дэвшигч',
+  },
+];
 
 export const formater = (too) => {
   too = '' + too;
@@ -27,52 +58,140 @@ export const formater = (too) => {
 };
 
 const User = () => {
-  // const {logout} = useContext(AuthContext);
-  const {auth} = useContext(UserState);
+  const [data, setData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const {auth, state, setStater} = useContext(UserState);
+  const [cnt, setCnt] = useState([0, 0]);
+
+  // const getData = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem('data');
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
+  const set = () => {
+    if (data.elCandidate === null || data.elCandidate === undefined) {
+      setCnt([data.promoterCnt, data.checkedCnt]);
+    } else {
+      setCnt([data.elCandidate.promoterCnt, data.elCandidate.checkedCnt]);
+    }
+  };
+
+  useEffect(() => {
+    onRefresh();
+    // setData(state.data);
+  }, []);
+
+  useEffect(() => {
+    set();
+  }, [data]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // console.log('userId: ', state.userId);
+    axios.defaults.headers.common = {
+      Authorization: `Bearer ${state.token}`,
+    };
+    axios
+      .get(`http://api.minu.mn/election/elUser/${state.userId}`)
+      .then((res) => {
+        // console.log('userRefresh: ', res.data);
+        if (res.data.message === 'Амжилттай') {
+          setData(res.data.entity);
+          // setStater('data', res.data.entity);
+          if (data.elCandidate === null || data.elCandidate === undefined) {
+            setCnt([data.promoterCnt, data.checkedCnt]);
+          } else {
+            setCnt([data.elCandidate.promoterCnt, data.elCandidate.checkedCnt]);
+          }
+        }
+      })
+      .catch((e) => console.log('userRefresh error: ', e.message))
+      .finally(() => {
+        setRefreshing(false);
+      });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContaner}>
-        <Text style={styles.title}>{'Хэрэглэгчийн булан'.toUpperCase()}</Text>
-        <View style={styles.underLine} />
-      </View>
-      <View style={styles.userContainer}>
-        <ProImg color="#F0F0F0" uri={null} />
-        <Text style={{fontSize: 14, fontWeight: 'bold', marginTop: 20}}>
-          Ц.Наранцэцэг
-        </Text>
-        <Text style={{fontSize: 10, color: '#707070'}}>Нэр дэвшигч</Text>
-        <Text style={{fontSize: 12, color: '#000000'}}>99882753</Text>
-      </View>
-      <View style={styles.Infos}>
-        <View style={styles.InfoHeader}>
-          <Text style={{fontSize: 10, color: '#707070'}}>НИЙТ ДЭМЖИГЧИД</Text>
-          <Text style={{fontSize: 60, fontWeight: 'bold'}}>
-            {formater(5424)}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{
+          flex: 1,
+          // backgroundColor: 'red',
+          paddingVertical: 80,
+          justifyContent: 'flex-start',
+        }}>
+        <View style={styles.titleContaner}>
+          <Text style={styles.title}>{'Хэрэглэгчийн булан'.toUpperCase()}</Text>
+          <View style={styles.underLine} />
+        </View>
+        <View style={styles.userContainer}>
+          <ProImg
+            color="#F0F0F0"
+            // uri={data.imgPath}
+            uri={
+              'http://api.minu.mn/election/elUser/download/171600323411474-6bd908e2-0696-4197-8332-b7441bf3cb44'
+            }
+          />
+          <Text style={{fontSize: 14, fontWeight: 'bold', marginTop: 20}}>
+            {data.lastName}
           </Text>
+          <Text style={{fontSize: 10, color: '#707070'}}>
+            {
+              roleNames[data.roleId === undefined ? 3 : data.roleId - 1]
+                .roleName
+            }
+          </Text>
+          <Text style={{fontSize: 12, color: '#000000'}}>{data.phone}</Text>
         </View>
-        <View style={styles.headerLine} />
-        <View style={styles.InfoBody}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 10, color: '#707070'}}>СОНГУУЛЬ ӨГСӨН</Text>
-            <Text style={{fontSize: 40, fontWeight: 'bold'}}>
-              {formater(5324)}
-            </Text>
-          </View>
-          <View style={styles.Line} />
-          <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 10, color: '#707070'}}>
-              СОНГУУЛЬ ӨГӨӨГҮЙ
-            </Text>
+        {state.userRole != 'Admin' && state.userRole != 'Super admin' && (
+          <View style={styles.Infos}>
+            <View style={styles.InfoHeader}>
+              <Text style={{fontSize: 10, color: '#707070'}}>
+                НИЙТ ДЭМЖИГЧИД
+              </Text>
+              <Text style={{fontSize: 60, fontWeight: 'bold'}}>
+                {formater(cnt[0] === undefined ? 0 : cnt[0])}
+              </Text>
+            </View>
+            <View style={styles.headerLine} />
+            <View style={styles.InfoBody}>
+              <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 10, color: '#707070'}}>
+                  СОНГУУЛЬ ӨГСӨН
+                </Text>
+                <Text style={{fontSize: 40, fontWeight: 'bold'}}>
+                  {formater(cnt[1] === undefined ? 0 : cnt[1])}
+                </Text>
+              </View>
+              <View style={styles.Line} />
+              <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 10, color: '#707070'}}>
+                  СОНГУУЛЬ ӨГӨӨГҮЙ
+                </Text>
 
-            <Text style={{fontSize: 40, fontWeight: 'bold', color: '#EC1A21'}}>
-              {formater(100)}
-            </Text>
+                <Text
+                  style={{fontSize: 40, fontWeight: 'bold', color: '#EC1A21'}}>
+                  {formater(cnt[0] === undefined ? 0 : cnt[0] - cnt[1])}
+                </Text>
+              </View>
+            </View>
           </View>
+        )}
+        <View
+          style={{
+            alignSelf: 'center',
+            marginTop: 20,
+            // marginBottom: 100,
+          }}>
+          <Button title="Гарах" onClick={auth.logout} />
         </View>
-      </View>
-      <View style={{alignSelf: 'center', marginTop: 20}}>
-        <Button title="Гарах" onClick={auth.logout} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -83,8 +202,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F0F0F0',
-    paddingVertical: 100,
-    justifyContent: 'flex-start',
+    // backgroundColor: 'blue',
   },
   titleContaner: {
     position: 'absolute',
@@ -109,7 +227,7 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 30,
   },
   Infos: {
     alignItems: 'center',

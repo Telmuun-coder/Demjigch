@@ -1,53 +1,74 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Members from '../Members';
 import Supporters from '../Supporters';
 import Search from '../Search';
+import Regions from '../../Screens/Regions';
+import Delgerenguis from '../../Screens/Delgerenguis';
+import {UserState} from '../../Context/UserStore';
 
 const Tab = createMaterialTopTabNavigator();
-const MembersWithSearch = createStackNavigator();
-const SupportersWithSearch = createStackNavigator();
-const MwS = () => (
-  <MembersWithSearch.Navigator>
-    <MembersWithSearch.Screen
-      name="Members"
-      component={Members}
-      options={{headerShown: false}}
-    />
-    <MembersWithSearch.Screen
-      name="Search"
-      component={Search}
-      options={{headerShown: false}}
-    />
-  </MembersWithSearch.Navigator>
-);
-const SwS = () => (
-  <SupportersWithSearch.Navigator>
-    <SupportersWithSearch.Screen
-      name="Supporters"
-      component={Supporters}
-      options={{headerShown: false}}
-    />
-    <SupportersWithSearch.Screen
-      name="Search"
-      component={Search}
-      options={{headerShown: false}}
-    />
-  </SupportersWithSearch.Navigator>
-);
+// const MembersWithSearch = createStackNavigator();
+// const SupportersWithSearch = createStackNavigator();
+const Toirog = createStackNavigator();
+
+// const MwS = () => (
+//   <MembersWithSearch.Navigator>
+//     <MembersWithSearch.Screen
+//       name="Members"
+//       component={Members}
+//       options={{headerShown: false}}
+//     />
+//     <MembersWithSearch.Screen
+//       name="Search"
+//       component={Search}
+//       options={{headerShown: false}}
+//     />
+//   </MembersWithSearch.Navigator>
+// );
+
+// const SwS = () => (
+//   <SupportersWithSearch.Navigator>
+//     <SupportersWithSearch.Screen
+//       name="Supporters"
+//       component={Supporters}
+//       options={{headerShown: false}}
+//     />
+//     <SupportersWithSearch.Screen
+//       name="Search"
+//       component={Search}
+//       options={{headerShown: false}}
+//     />
+//   </SupportersWithSearch.Navigator>
+// );
+
 const TopTabs = () => {
+  const {state} = useContext(UserState);
+  const normalStyle = {
+    width: '15%',
+    alignSelf: 'center',
+    marginHorizontal: '11%',
+  };
+  const adminStyle = {
+    width: '20%',
+    alignSelf: 'center',
+    marginHorizontal: '40%',
+  };
+  const style =
+    state.userRole === 'Admin' || state.userRole === 'Super admin'
+      ? adminStyle
+      : normalStyle;
   return (
     <Tab.Navigator
       tabBarOptions={{
         labelStyle: {fontWeight: 'bold', fontSize: 15},
         indicatorStyle: {
           backgroundColor: '#000000',
-          height: 4,
-          width: 72,
-          alignSelf: 'center',
           borderRadius: 5,
-          marginHorizontal: '10%',
+          height: 4,
+
+          ...style,
         },
         indicatorContainerStyle: {
           backgroundColor: '#F0F0F0',
@@ -58,29 +79,57 @@ const TopTabs = () => {
           shadowRadius: 0,
         },
       }}>
-      <Tab.Screen
-        name="MwS"
-        component={MwS}
-        options={{
-          tabBarLabel: 'ГИШҮҮД',
-        }}
-      />
-      <Tab.Screen
-        name="SwS"
-        component={SwS}
-        options={{
-          tabBarLabel: 'ДЭМЖИГЧИД',
-        }}
-      />
-      {/* <Tab.Screen
-        name="Regions"
-        component={Members}
-        options={{
-          tabBarLabel: 'ТОЙРГУУД',
-        }}
-      /> */}
+      {state.userRole === 'Admin' || state.userRole === 'Super admin' ? (
+        <Tab.Screen
+          name="Regions"
+          component={Regions}
+          options={{
+            tabBarLabel: 'ТОЙРГУУД',
+          }}
+        />
+      ) : (
+        <>
+          <Tab.Screen
+            name="Members"
+            component={Members}
+            options={{
+              tabBarLabel: 'ГИШҮҮД',
+            }}
+          />
+          <Tab.Screen
+            name="Supporters"
+            component={Supporters}
+            options={{
+              tabBarLabel: 'ДЭМЖИГЧИД',
+            }}
+          />
+        </>
+      )}
     </Tab.Navigator>
   );
 };
 
-export default TopTabs;
+const RaD = () => (
+  <Toirog.Navigator>
+    <Toirog.Screen
+      name="TopTabs"
+      component={TopTabs}
+      options={{headerShown: false}}
+    />
+    <Toirog.Screen
+      name="Delgerenguis"
+      component={Delgerenguis}
+      options={{headerShown: false}}
+    />
+    <Tab.Screen
+      name="Supporters"
+      component={Supporters}
+      options={{headerShown: false}}
+      // options={{
+      //   tabBarLabel: 'ДЭМЖИГЧИД',
+      // }}
+    />
+  </Toirog.Navigator>
+);
+
+export default RaD;

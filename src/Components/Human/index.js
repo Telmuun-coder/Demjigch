@@ -1,72 +1,100 @@
-import React, {useState} from 'react';
+import React, {PureComponent} from 'react';
 import {StyleSheet, Text, View, TouchableNativeFeedback} from 'react-native';
 import ProImg from '../ProImg';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Mood from '../Mood';
 import axios from 'axios';
+import {UserState} from '../../Context/UserStore';
 
-const Human = (props) => {
-  const [show, setShow] = useState(false);
-  const [flag, setFlag] = useState(props.data.elPromoter.enableFlag);
-  const putData = () => {
-    const data = {
-      candidateId: props.data.candidateId,
-      promoterId: props.data.promoterId,
-      userId: props.data.userId,
-      electionId: props.data.electionId,
-      enableFlag: !props.data.enableFlag,
+class Human extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      flag: this.props.data.enableFlag,
     };
-    console.log('dsa', data);
+  }
+  setShow = (val) => this.setState({show: val});
+  setFlag = (able) => this.setState({flag: able});
+  static contextType = UserState;
+
+  // componentDidMount() {
+  //   this.setFlag(this.props.data.enableFlag);
+  // }
+
+  componentDidUpdate() {
+    this.setFlag(this.props.data.enableFlag);
+  }
+
+  // useEffect(() => {
+  //   setFlag(props.data.enableFlag);
+  // }, [props.data.enableFlag]);
+
+  putData = () => {
+    const data = {
+      promoterId: this.props.data.promoterId,
+      userId: this.props.data.userId,
+      enableFlag: !this.props.data.enableFlag,
+    };
+
     let config = {
       headers: {
         headers: {'Content-Type': 'application/json'},
+        Authorization: `Bearer ${this.context.state.token}`,
       },
     };
     axios
-      .put('http://192.168.137.1:8081/election/elPromoter/update', data, config)
+      .put('http://api.minu.mn/election/elPromoter/updateCnt', data, config)
       .then((res) => {
         console.log('Flag: ', res.data);
-        setFlag(!flag);
+        if (res.data.message === 'Амжилттай') {
+          this.props.onRefresh();
+          // this.setFlag(res.data.entity.enableFlag);
+          // this.props.reRender();
+          console.log('mani duudagdjinu');
+        } else alert('Алдаа гарлаа');
       })
       .catch((e) => console.log('FlafError', e.message))
-      .finally(() => setShow(false));
+      .finally(() => this.setShow(false));
   };
-  return (
-    <TouchableNativeFeedback
-      useForeground={false}
-      background={TouchableNativeFeedback.Ripple('#5F5F5F')}
-      onPress={() => setShow(true)}>
-      <View style={styles.container}>
-        <Mood
-          data={props.data.elPromoter}
-          show={show}
-          putData={putData}
-          setShow={() => setShow(false)}
-        />
-        {flag && (
-          <Icon
-            style={styles.check}
-            name="checkcircle"
-            color={'#EC1A21'}
-            size={24}
-          />
-        )}
-        <ProImg
-          mini={true}
-          color="#F0F0F0"
-          uri={props.data.elPromoter.imgPath}
-        />
-        <Text style={styles.name}>
-          {props.data.elPromoter.firstName[0].toUpperCase() +
-            '. ' +
-            props.data.elPromoter.lastName.toUpperCase()}
-        </Text>
-        <Text style={styles.mail}>{props.data.elPromoter.email}</Text>
-        <Text style={styles.num}>{props.data.elPromoter.phone}</Text>
-      </View>
-    </TouchableNativeFeedback>
-  );
-};
+  render() {
+    if (this.props.data.blank)
+      return <View style={[styles.container, {height: 90}]} />;
+    else
+      return (
+        <TouchableNativeFeedback
+          useForeground={false}
+          background={TouchableNativeFeedback.Ripple('#5F5F5F')}
+          onPress={() => this.setShow(true)}>
+          <View style={styles.container}>
+            <Mood
+              flag={this.state.flag}
+              data={this.props.data}
+              show={this.state.show}
+              putData={this.putData}
+              setShow={() => this.setShow(false)}
+            />
+            {this.state.flag && (
+              <Icon
+                style={styles.check}
+                name="checkcircle"
+                color={'#EC1A21'}
+                size={24}
+              />
+            )}
+            <ProImg mini={true} color="#F0F0F0" uri={this.props.data.imgPath} />
+            <Text style={styles.name}>
+              {this.props.data.firstName[0] + //end aldaa zaaj bn
+                '. ' +
+                this.props.data.lastName}
+            </Text>
+            <Text style={styles.mail}>{this.props.data.email}</Text>
+            <Text style={styles.num}>{this.props.data.phone}</Text>
+          </View>
+        </TouchableNativeFeedback>
+      );
+  }
+}
 
 export default Human;
 
@@ -83,7 +111,9 @@ const styles = StyleSheet.create({
     color: '#000000',
     opacity: 0.87,
   },
-  numm: {
+  num: {
+    alignSelf: 'center',
+    // backgroundColor: 'red',
     fontSize: 10,
     color: '#000000',
     opacity: 0.87,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Image, Dimensions} from 'react-native';
 import {Grayscale} from 'react-native-color-matrix-image-filters';
-
+import {UserState} from '../../Context/UserStore';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const ProImg = (props) => {
@@ -19,7 +19,7 @@ const ProImg = (props) => {
       <View style={[styles.topRight, {backgroundColor: props.color}]} />
       <View style={[styles.bottomLeft, {backgroundColor: props.color}]} />
       <View style={[styles.bottomRight, {backgroundColor: props.color}]} />
-      <Grayscale amount={0.9}>
+      <Grayscale amount={1}>
         <Image
           style={[
             styles.img,
@@ -29,15 +29,15 @@ const ProImg = (props) => {
               height: 75,
             },
           ]}
-          // source={require('../../Images/hurelee.jpg')}
           source={
-            props.uri ? {uri: props.uri} : require('../../Images/hurelee.jpg')
+            props.uri
+              ? {
+                  uri:
+                    // 'http://api.minu.mn/election/elUser/download/' +
+                    props.uri,
+                }
+              : require('../../Images/hurelee.jpg')
           }
-          // source={require('../../Images/Pure.png')}
-          // source={{
-          //   uri:
-          //     'https://lh3.googleusercontent.com/proxy/Lge7eTOMGGCNofaXd0CGEWMX-e_p9dsu6uV1puPwMuSKc0n9yFz_cEPXcwVuvh3oFXXhQQqH5B4lVA6wbbqvzZ5xvDezsZP0pT9FWJ2yl2W8Xe5fxMzdHdUnYgLaKZsuDvEAUlSnUA',
-          // }}
         />
       </Grayscale>
     </View>

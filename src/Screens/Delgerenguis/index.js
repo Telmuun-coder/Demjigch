@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,54 +8,80 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import ProgressCircle from 'react-native-progress-circle';
-import ProImg from '../../Components/ProImg';
-import {formater} from '../User';
-import Taniltsuulga from '../../Components/Delgerengui/index'
+import Icon from 'react-native-vector-icons/AntDesign';
+import Delgerengui from '../../Components/Delgerengui';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Dewshigch = (navigation) => {
+const Delgerenguis = ({route, navigation}) => {
+  const {data} = route.params;
   return (
     <View style={styles.container}>
       <View style={styles.toptab}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{position: 'absolute', top: 10, left: 10, zIndex: 100}}>
+          <Icon name="arrowleft" color="black" size={30} />
+        </TouchableOpacity>
         <Text style={styles.underlineTextContainer}>
-          1-Р ТОЙРОГТ НЭР ДЭВШИГЧИД
+          {data.committeeName !== 'Нийслэл'
+            ? data.committeeName.slice(0, data.committeeName.length - 8) +
+              '-Р ХОРООНД '
+            : 'НИЙСЛЭЛД '}
+          НЭР ДЭВШИГЧИД
         </Text>
+        <View style={styles.underLine} />
       </View>
-      <ScrollView style={styles.Scroll} contentContainerStyle={{alignItems:'center'}}>
-        <Taniltsuulga/>
-        <Taniltsuulga/>
-        <Taniltsuulga/>
+      <ScrollView
+        style={styles.Scroll}
+        contentContainerStyle={styles.scrollExtra}>
+        {data.candidates.map((e, i) => (
+          <Delgerengui data={e} key={i} navigation={navigation} />
+        ))}
       </ScrollView>
     </View>
   );
 };
-export default Dewshigch;
+export default Delgerenguis;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4F4F4',
+    backgroundColor: '#F0F0F0',
+    paddingTop: 50,
   },
   toptab: {
-    height: windowHeight * 0.08,
-    justifyContent: 'center',
+    elevation: 5,
+    position: 'absolute',
+    top: 0,
+    zIndex: 20,
+    alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor: '#F4F4F4',
+    justifyContent: 'space-between',
+    height: 50,
+    paddingTop: 15,
+    width: windowWidth * 1,
+    backgroundColor: '#F0F0F0',
   },
   underlineTextContainer: {
+    fontSize: 16,
     fontWeight: 'bold',
-    fontSize: windowHeight * 0.02,
-    padding: windowHeight * 0.006,
-    alignItems: 'center',
-    borderBottomWidth: windowHeight * 0.004,
-    borderColor: '#000',
+  },
+  underLine: {
+    borderRadius: 4,
+    height: 4,
+    width: 72,
+    backgroundColor: '#000000',
   },
   Scroll: {
     alignSelf: 'center',
     backgroundColor: '#F4F4F4',
     width: windowWidth,
   },
-  
+  scrollExtra: {
+    alignItems: 'center',
+    paddingBottom: 50,
+    paddingTop: 10,
+  },
 });

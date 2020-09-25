@@ -12,25 +12,22 @@ import {
 import Input from '../../Components/Input';
 import Button from '../../Components/Button';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {AuthContext} from '../../Context/Auth';
+import Spinner from '../../Components/Spinner';
 import {UserState} from '../../Context/UserStore';
+import ErrorMessage from '../../Components/ErrorMessage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Login = (props) => {
-  const [rem, setRem] = useState(true);
-  // const {login} = useContext(AuthContext);
-  const {auth} = useContext(UserState);
-  const [number, setNumber] = useState('99882753');
-  const [password, setPassword] = useState('pass');
+const Login = () => {
+  const [spin, setSpin] = useState(false);
+  const {auth, setRem, rem} = useContext(UserState);
+  const [number, setNumber] = useState('99887788'); //88564757,99887788,99115544
+  const [password, setPassword] = useState('12345678'); //12345678
   return (
     <SafeAreaView style={styles.container}>
+      <Spinner visible={spin} />
       <View style={{alignItems: 'center'}}>
-        <Image
-          style={styles.logo}
-          source={require('../../Images/noWordLogo/logoTom.png')}
-        />
         <Text style={styles.title}>ГИШҮҮД ДЭМЖИГЧДИЙН</Text>
       </View>
       <View
@@ -39,8 +36,21 @@ const Login = (props) => {
           alignItems: 'center',
           height: windowHeight * 0.065 * 3.5,
         }}>
-        <Input title="Бүртгэлтэй утасны дугаар" placeHolder="" type="number" />
-        <Input title="Нууц үг" placeHolder="" type="password" />
+        <ErrorMessage />
+        <Input
+          value={number}
+          onChange={(e) => setNumber(e)}
+          title="Бүртгэлтэй утасны дугаар"
+          placeHolder=""
+          type="number"
+        />
+        <Input
+          onChange={(e) => setPassword(e)}
+          value={password}
+          title="Нууц үг"
+          placeHolder=""
+          type="password"
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -50,16 +60,11 @@ const Login = (props) => {
             paddingLeft: '10%',
           }}>
           <TouchableOpacity
-            onPress={() => setRem(!rem)}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              width: '25%',
-              alignItems: 'center',
-            }}>
+            onPress={() => setRem((Prev) => (Prev === 'had' ? 'hud' : 'had'))}
+            style={styles.remember}>
             <Icon
               name="checkcircle"
-              color={rem ? '#EC1A21' : '#8F8F8F'}
+              color={rem === 'had' ? '#EC1A21' : '#8F8F8F'}
               size={25}
             />
             <Text>Сануулах</Text>
@@ -71,7 +76,10 @@ const Login = (props) => {
       </View>
 
       <View>
-        <Button title="НЭВТРЭХ" onClick={() => auth.login(number, password)} />
+        <Button
+          title="НЭВТРЭХ"
+          onClick={() => auth.login(number, password, setSpin, rem)}
+        />
       </View>
     </SafeAreaView>
   );
@@ -93,5 +101,11 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  remember: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '25%',
+    alignItems: 'center',
   },
 });
