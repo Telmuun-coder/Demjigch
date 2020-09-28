@@ -38,7 +38,7 @@ const Members = (props) => {
     };
     // console.log('page', page);
     const data = {
-      // committeeId: state.committeeId, neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+      committeeId: state.committeeId, //neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
       page: pageNum,
       // areaId: null,
       // cityId: null,
@@ -80,7 +80,7 @@ const Members = (props) => {
       Authorization: `Bearer ${state.token}`,
     };
     const data = {
-      // committeeId: state.committeeId,
+      committeeId: state.committeeId,
       page: 1,
     };
     axios
@@ -116,7 +116,7 @@ const Members = (props) => {
       Authorization: `Bearer ${state.token}`,
     };
     const data = {
-      // committeeId: state.committeeId,
+      committeeId: state.committeeId,
       searchValue: keyWord,
     };
     axios

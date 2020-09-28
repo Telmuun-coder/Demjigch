@@ -41,8 +41,8 @@ const Supporters = (props) => {
 
   const loadData = async (pageNum) => {
     let sendingData = {
-      // userId: state.userId,
-      // candidateId: state.candidateId,
+      userId: state.userId,
+      candidateId: state.candidateId,
       page: pageNum,
     };
     // Adminar nevtersen uyd tuhain ner devshigchiin demjigchdiig haruulahin tuld ner devshigchiin Id-g ywuulna
@@ -107,8 +107,8 @@ const Supporters = (props) => {
     setIsSeartching(false);
     setResult([]);
     let sendingData = {
-      // userId: state.userId,
-      // candidateId: state.candidateId,
+      userId: state.userId,
+      candidateId: state.candidateId,
       page: 1,
     };
     // Adminar nevtersen uyd tuhain ner devshigchiin demjigchdiig haruulahin tuld ner devshigchiin Id-g ywuulna
@@ -152,8 +152,8 @@ const Supporters = (props) => {
       Authorization: `Bearer ${state.token}`,
     };
     const data = {
-      // userId: state.userId,
-      // candidateId: state.candidateId,
+      userId: state.userId,
+      candidateId: state.candidateId,
       searchValue: keyWord,
     };
     axios
