@@ -138,7 +138,7 @@ const AddMember = () => {
       }
     }
     setDetect({...tmp});
-
+    console.log('whyyyyyyyyyyyy', data);
     if (ok) {
       setDetect({...falser});
       setSpin(true);

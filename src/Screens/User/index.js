@@ -133,10 +133,10 @@ const User = () => {
         <View style={styles.userContainer}>
           <ProImg
             color="#F0F0F0"
-            // uri={data.imgPath}
-            uri={
-              'http://api.minu.mn/election/elUser/download/171600323411474-6bd908e2-0696-4197-8332-b7441bf3cb44'
-            }
+            uri={data.imgPath}
+            // uri={
+            //   'http://api.minu.mn/election/elUser/download/171600323411474-6bd908e2-0696-4197-8332-b7441bf3cb44'
+            // }
           />
           <Text style={{fontSize: 14, fontWeight: 'bold', marginTop: 20}}>
             {data.lastName}

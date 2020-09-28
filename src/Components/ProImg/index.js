@@ -33,8 +33,10 @@ const ProImg = (props) => {
             props.uri
               ? {
                   uri:
-                    // 'http://api.minu.mn/election/elUser/download/' +
-                    props.uri,
+                    props.uri.length == 52
+                      ? 'http://api.minu.mn/election/elUser/download/' +
+                        props.uri
+                      : props.uri,
                 }
               : require('../../Images/hurelee.jpg')
           }
