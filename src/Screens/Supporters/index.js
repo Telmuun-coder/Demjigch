@@ -86,9 +86,20 @@ const Supporters = (props) => {
     return () => (isMountedRef.current = false);
   }, []);
 
-  // useEffect(() => {
-  //   // setReRender((Pre) => Pre + 1);
-  // }, [reRender]);
+  const changeDataLocal = (flag, proId) => {
+    let tmp = humans;
+    tmp.find((element) => {
+      if (element.promoterId === proId) element.enableFlag = flag;
+    });
+    setHumans([...tmp]);
+  };
+  const changeDataSearch = (flag, proId) => {
+    let tmp = result;
+    tmp.find((element) => {
+      if (element.promoterId === proId) element.enableFlag = flag;
+    });
+    setResult([...tmp]);
+  };
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -165,7 +176,14 @@ const Supporters = (props) => {
       });
   };
   const renderHuman = ({item}) => {
-    return <Human data={item} onRefresh={isSearching ? doSearch : onRefresh} />;
+    return (
+      <Human
+        data={item}
+        change={(f, id) => {
+          isSearching ? changeDataSearch(f, id) : changeDataLocal(f, id);
+        }}
+      />
+    );
   };
   const clearSearch = () => {
     setKeyWord('');
@@ -280,9 +298,9 @@ const styles = StyleSheet.create({
     marginTop: '1%',
     alignSelf: 'center',
     flexDirection: 'row',
-    marginRight: 10,
+    // marginRight: 10,
     borderRadius: 20,
-    // width: 70,
+    // minWidth: 150,
     height: 30,
     alignItems: 'center',
     justifyContent: 'space-between',

@@ -28,6 +28,10 @@ const Login = () => {
     <SafeAreaView style={styles.container}>
       <Spinner visible={spin} />
       <View style={{alignItems: 'center'}}>
+        <Image
+          style={styles.logo}
+          source={require('../../Images/noWordLogo/logoTom.png')}
+        />
         <Text style={styles.title}>ГИШҮҮД ДЭМЖИГЧДИЙН</Text>
       </View>
       <View

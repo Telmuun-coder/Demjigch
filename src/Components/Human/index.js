@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Mood from '../Mood';
 import axios from 'axios';
 import {UserState} from '../../Context/UserStore';
+import Spinner from '../Spinner';
 
 class Human extends PureComponent {
   constructor(props) {
@@ -12,6 +13,7 @@ class Human extends PureComponent {
     this.state = {
       show: false,
       flag: this.props.data.enableFlag,
+      spin: false,
     };
   }
   setShow = (val) => this.setState({show: val});
@@ -31,6 +33,7 @@ class Human extends PureComponent {
   // }, [props.data.enableFlag]);
 
   putData = () => {
+    this.setState({spin: true});
     const data = {
       promoterId: this.props.data.promoterId,
       userId: this.props.data.userId,
@@ -46,16 +49,22 @@ class Human extends PureComponent {
     axios
       .put('http://api.minu.mn/election/elPromoter/updateCnt', data, config)
       .then((res) => {
-        console.log('Flag: ', res.data);
+        // console.log('Flag: ', res.data);
         if (res.data.message === 'Амжилттай') {
-          this.props.onRefresh();
+          this.props.change(
+            !this.props.data.enableFlag,
+            this.props.data.promoterId,
+          );
+          //this.props.onRefresh();
           // this.setFlag(res.data.entity.enableFlag);
-          // this.props.reRender();
-          console.log('mani duudagdjinu');
+          // console.log('mani duudagdjinu');
         } else alert('Алдаа гарлаа');
       })
       .catch((e) => console.log('FlafError', e.message))
-      .finally(() => this.setShow(false));
+      .finally(() => {
+        this.setState({spin: false});
+        this.setShow(false);
+      });
   };
   render() {
     if (this.props.data.blank)
@@ -72,6 +81,7 @@ class Human extends PureComponent {
               data={this.props.data}
               show={this.state.show}
               putData={this.putData}
+              spin={this.state.spin}
               setShow={() => this.setShow(false)}
             />
             {this.state.flag && (

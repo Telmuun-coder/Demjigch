@@ -8,6 +8,7 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  Keyboard,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -31,15 +32,34 @@ const windowHeight = Dimensions.get('window').height;
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
+  const [hide, setHide] = useState(false);
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+    // cleanup function
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
+      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
+    };
+  }, []);
+
+  const _keyboardDidShow = () => {
+    setHide(true);
+  };
+
+  const _keyboardDidHide = () => {
+    setHide(false);
+  };
   return (
     <Tab.Navigator
       // initialRouteName="Members"
       initialRouteName="AddMember"
       tabBarOptions={{
-        style: {
-          // position: 'absolute',
-          // top: windowHeight * 0.905,
-          // bottom: 0,
+        style: hide && {
+          position: 'absolute',
+          top: windowHeight * 0.905,
+          bottom: 0,
         },
         activeTintColor: '#E51F1D',
         showLabel: false,

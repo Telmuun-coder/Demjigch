@@ -12,15 +12,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ProImg from '../ProImg';
 import ViewInput from '../ViewInput';
 import Button from '../Button';
+import Spinner from '../Spinner';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Mood = ({show, setShow, data, putData, flag}) => {
+const Mood = ({show, setShow, data, putData, flag, spin}) => {
   return (
     <Modal visible={show} transparent={true} onRequestClose={setShow}>
       <View style={styles.shadow} onStartShouldSetResponder={setShow} />
       <View style={styles.container}>
+        <Spinner visible={spin} />
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.close}
