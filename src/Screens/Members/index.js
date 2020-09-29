@@ -148,21 +148,29 @@ const Members = (props) => {
       {/* <StatusBar backgroundColor="#E51F1D" /> */}
       <Spinner visible={spin} />
       <View style={[styles.search, {backgroundColor: 'white'}]}>
-        <Ficon name="search" size={25} color="#9E9898" />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Хайх ..."
-          value={keyWord}
-          onChangeText={(e) => {
-            setKeyWord(e);
-            if (e === '' || e == null) {
-              clearSearch();
-            }
-          }}
-          onSubmitEditing={() => keyWord != '' && doSearch()}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 5,
+          }}>
+          <Ficon name="search" size={20} color="#9E9898" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Хайх ..."
+            value={keyWord}
+            onChangeText={(e) => {
+              setKeyWord(e);
+              if (e === '' || e == null) {
+                clearSearch();
+              }
+            }}
+            onSubmitEditing={() => keyWord != '' && doSearch()}
+          />
+        </View>
         <TouchableOpacity onPress={() => clearSearch()}>
-          <Ficon name="x" size={30} color="#9E9898" />
+          <Ficon name="x" size={20} color="#9E9898" />
         </TouchableOpacity>
       </View>
       {isSearching ? (
@@ -185,6 +193,7 @@ const Members = (props) => {
               height: '95%',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: -18,
             }}>
             <Text>{message}</Text>
           </View>
@@ -234,25 +243,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   search: {
-    marginTop: '1%',
-    // position: 'absolute',
-    // right: 10,
-    // top: 0,
-    // zIndex: 10,
-    // backgroundColor: 'yellow',
+    marginTop: '2%',
     alignSelf: 'center',
     flexDirection: 'row',
-    marginRight: 10,
+    // marginRight: 10,
     borderRadius: 20,
     // minWidth: 150,
+    // maxWidth: Dimensions.get('screen').width,
     height: 30,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '2%',
   },
   searchInput: {
     padding: 0,
     // backgroundColor: 'red',
-    minWidth: 50,
+    width: 150,
     height: 35,
+    marginLeft: 3,
   },
 });

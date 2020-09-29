@@ -22,8 +22,8 @@ const windowHeight = Dimensions.get('window').height;
 const Login = () => {
   const [spin, setSpin] = useState(false);
   const {auth, setRem, rem} = useContext(UserState);
-  const [number, setNumber] = useState('99887788'); //88564757,99887788,99115544
-  const [password, setPassword] = useState('12345678'); //12345678
+  const [number, setNumber] = useState(null); //88564757,99887788,99115544
+  const [password, setPassword] = useState(null); //12345678
   return (
     <SafeAreaView style={styles.container}>
       <Spinner visible={spin} />
@@ -71,9 +71,9 @@ const Login = () => {
               color={rem === 'had' ? '#EC1A21' : '#8F8F8F'}
               size={25}
             />
-            <Text>Сануулах</Text>
+            <Text style={{marginLeft: 5}}>Сануулах</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={{justifyContent: 'center'}}>
             <Text>Нууц үг мартсан</Text>
           </TouchableOpacity>
         </View>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   remember: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '25%',
     alignItems: 'center',
   },

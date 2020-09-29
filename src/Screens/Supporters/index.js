@@ -214,21 +214,31 @@ const Supporters = (props) => {
         </View>
       )}
       <View style={[styles.search, {backgroundColor: 'white'}]}>
-        <Ficon name="search" size={25} color="#9E9898" />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Хайх ..."
-          value={keyWord}
-          onChangeText={(e) => {
-            setKeyWord(e);
-            if (e === '' || e == null) {
-              clearSearch();
-            }
-          }}
-          onSubmitEditing={() => keyWord != '' && doSearch()}
-        />
-        <TouchableOpacity onPress={() => clearSearch()}>
-          <Ficon name="x" size={30} color="#9E9898" />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 5,
+          }}>
+          <Ficon name="search" size={20} color="#9E9898" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Хайх ..."
+            value={keyWord}
+            onChangeText={(e) => {
+              setKeyWord(e);
+              if (e === '' || e == null) {
+                clearSearch();
+              }
+            }}
+            onSubmitEditing={() => keyWord != '' && doSearch()}
+          />
+        </View>
+        <TouchableOpacity
+          style={{marginRight: 5}}
+          onPress={() => clearSearch()}>
+          <Ficon name="x" size={20} color="#9E9898" />
         </TouchableOpacity>
       </View>
       {isSearching ? (
@@ -254,6 +264,7 @@ const Supporters = (props) => {
               height: '95%',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: -18,
             }}>
             <Text>{message}</Text>
           </View>
@@ -295,15 +306,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   search: {
-    marginTop: '1%',
+    marginTop: '2%',
     alignSelf: 'center',
     flexDirection: 'row',
     // marginRight: 10,
     borderRadius: 20,
     // minWidth: 150,
+    // maxWidth: Dimensions.get('screen').width,
     height: 30,
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: '2%',
   },
   footer: {
     width: '100%',
@@ -313,8 +326,9 @@ const styles = StyleSheet.create({
   searchInput: {
     padding: 0,
     // backgroundColor: 'red',
-    minWidth: 50,
+    width: 150,
     height: 35,
+    marginLeft: 3,
   },
   toptab: {
     elevation: 5,
