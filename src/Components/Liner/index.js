@@ -15,7 +15,7 @@ const Liner = (props) => {
       <View style={styles.numContainer}>
         <Text style={[styles.num, {color: '#E51F1D'}]}>{props.red}</Text>
         <Text style={styles.num}>/</Text>
-        <Text style={styles.num}>10</Text>
+        <Text style={styles.num}>500</Text>
       </View>
     </View>
   );

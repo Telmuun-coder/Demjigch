@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -62,6 +62,8 @@ const User = () => {
   const [refreshing, setRefreshing] = useState(false);
   const {auth, state, setStater} = useContext(UserState);
   const [cnt, setCnt] = useState([0, 0]);
+  const [ass, setAss] = useState(false);
+  const isMountedRef = useRef(null);
 
   // const getData = async () => {
   //   try {
@@ -80,8 +82,10 @@ const User = () => {
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
+    // setAss(true);
     onRefresh();
-    // setData(state.data);
+    return () => (isMountedRef.current = false);
   }, []);
 
   useEffect(() => {
@@ -90,28 +94,34 @@ const User = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    // setAss(true);
     // console.log('userId: ', state.userId);
     axios.defaults.headers.common = {
       Authorization: `Bearer ${state.token}`,
     };
-    axios
-      .get(`http://api.minu.mn/election/elUser/${state.userId}`)
-      .then((res) => {
-        // console.log('userRefresh: ', res.data);
-        if (res.data.message === 'Амжилттай') {
-          setData(res.data.entity);
-          // setStater('data', res.data.entity);
-          if (data.elCandidate === null || data.elCandidate === undefined) {
-            setCnt([data.promoterCnt, data.checkedCnt]);
-          } else {
-            setCnt([data.elCandidate.promoterCnt, data.elCandidate.checkedCnt]);
+    if (isMountedRef.current)
+      axios
+        .get(`http://api.minu.mn/election/elUser/${state.userId}`)
+        .then((res) => {
+          // console.log('userRefresh: ', res.data);
+          if (res.data.message === 'Амжилттай') {
+            setData(res.data.entity);
+            // setStater('data', res.data.entity);
+            if (data.elCandidate === null || data.elCandidate === undefined) {
+              setCnt([data.promoterCnt, data.checkedCnt]);
+            } else {
+              setCnt([
+                data.elCandidate.promoterCnt,
+                data.elCandidate.checkedCnt,
+              ]);
+            }
           }
-        }
-      })
-      .catch((e) => console.log('userRefresh error: ', e.message))
-      .finally(() => {
-        setRefreshing(false);
-      });
+        })
+        .catch((e) => console.log('userRefresh error: ', e.message))
+        .finally(() => {
+          setRefreshing(false);
+          // setAss(false);
+        });
   }, []);
 
   return (

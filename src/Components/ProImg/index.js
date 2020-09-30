@@ -38,7 +38,7 @@ const ProImg = (props) => {
                         props.uri
                       : props.uri,
                 }
-              : require('../../Images/hurelee.jpg')
+              : require('../../Images/avatarZurag.webp')
           }
         />
       </Grayscale>

@@ -4,10 +4,10 @@ const Sukhbaatar = {
     //   roleId: 1,
     //   roleName: 'Super admin',
     // },
-    {
-      roleId: 2,
-      roleName: 'Admin',
-    },
+    // {
+    //   roleId: 2,
+    //   roleName: 'Admin',
+    // },
     {
       roleId: 3,
       roleName: 'Намын гишүүн',
@@ -16,10 +16,13 @@ const Sukhbaatar = {
       roleId: 4,
       roleName: 'Ухуулагч',
     },
-    {
-      roleId: 5,
-      roleName: 'Нэр дэвшигч',
-    },
+    // {
+    //   roleName: 'Дэмжигч',
+    // },
+    // {
+    //   roleId: 5,
+    //   roleName: 'Нэр дэвшигч',
+    // },
   ],
   elArea: [
     {

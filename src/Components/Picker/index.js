@@ -7,6 +7,15 @@ import {Switch} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const data = require('../../Data/Sukhbaatar');
+const roles = [
+  {
+    roleId: 4,
+    roleName: 'Ухуулагч',
+  },
+  {
+    roleName: 'Дэмжигч',
+  },
+];
 
 const Pick = (props) => {
   switch (props.type) {
@@ -21,6 +30,23 @@ const Pick = (props) => {
           }}
           mode="dialog">
           {data.elRole.map((e, i) => (
+            <Picker.Item key={i} label={e.roleName} value={e} />
+          ))}
+        </Picker>
+      );
+    case 'gish':
+      return (
+        <Picker
+          style={[styles.picker, {width: '64%'}]}
+          selectedValue={props.selectedValue}
+          onValueChange={(itemValue, itemIndex) => {
+            props.onValueChange(itemValue);
+            console.log('selected', itemValue);
+          }}
+          mode="dialog">
+          {/* <Picker.Item label={data.elRole[2].roleName} value={data.elRole} />
+          <Picker.Item label={data.elRole[3].roleName} value={data.elRole} /> */}
+          {roles.map((e, i) => (
             <Picker.Item key={i} label={e.roleName} value={e} />
           ))}
         </Picker>

@@ -43,11 +43,14 @@ const falser = {
 const roles = require('../../Data/Sukhbaatar');
 
 const AddMember = () => {
+  const {state, setStater} = useContext(UserState);
   const [uri, setUri] = useState('a');
   const [path, setPath] = useState('');
   const [duureg, setDuureg] = useState(roles.elArea[0]);
   const [horoo, setHoroo] = useState(roles.elCommittee[0]);
-  const [tolow, setTolow] = useState(roles.elRole[0]);
+  const [tolow, setTolow] = useState(
+    state.userRole === 'Гишүүн' ? roles.elRole[2] : roles.elRole[0],
+  );
   const [phone1, setPhone1] = useState('');
   const [phone2, setPhone2] = useState('');
   const [ovog, setOvog] = useState('');
@@ -57,7 +60,6 @@ const AddMember = () => {
   const [hayg, setHayg] = useState('');
   const [spin, setSpin] = useState(false);
   const [register, setRegister] = useState('');
-  const {state, setStater} = useContext(UserState);
   const [candidate, setCandidate] = useState(state.candidates[0]);
   const [detect, setDetect] = useState({
     firstName: false,
@@ -70,6 +72,22 @@ const AddMember = () => {
     register: false,
     address: false,
   });
+
+  const clearFields = () => {
+    console.log('Am I calling me?');
+    setUri('a');
+    setPath('');
+    setDuureg(roles.elArea[0]);
+    setHoroo(roles.elCommittee[0]);
+    setPhone1('');
+    setPhone2('');
+    setOvog('');
+    setNer('');
+    setEmail('');
+    setFb('');
+    setHayg('');
+    setRegister('');
+  };
 
   const upload = async (image) => {
     setSpin(true);
@@ -133,12 +151,13 @@ const AddMember = () => {
         property != 'phone2' &&
         property != 'imgPath'
       ) {
+        console.log(property);
         tmp[property] = true;
         ok = false;
       }
     }
     setDetect({...tmp});
-    console.log('whyyyyyyyyyyyy', data);
+    // console.log('Save1', data);
     if (ok) {
       setDetect({...falser});
       setSpin(true);
@@ -151,6 +170,7 @@ const AddMember = () => {
           if (res.data.message === 'Амжилттай') {
             setStater('error', null);
             alert(res.data.message);
+            clearFields();
           } else {
             setStater('error', res.data.message);
             alert(res.data.message);
@@ -164,7 +184,6 @@ const AddMember = () => {
   };
 
   const Save1 = () => {
-    // console.log(state.token);
     const data = {
       firstName: ovog,
       lastName: ner,
@@ -174,7 +193,8 @@ const AddMember = () => {
       imgPath: path,
       register: register,
       facebookName: fb,
-      committeeId: horoo.committeeId,
+      committeeId:
+        state.userRole === 'Гишүүн' ? state.committeeId : horoo.committeeId,
       address: hayg,
       roleId: tolow.roleId,
     };
@@ -192,7 +212,7 @@ const AddMember = () => {
       }
     }
     setDetect({...tmp});
-
+    // console.log('Save1', data);
     if (ok) {
       setSpin(true);
       setDetect({...falser});
@@ -204,6 +224,7 @@ const AddMember = () => {
         .then((res) => {
           if (res.data.message === 'Амжилттай') {
             alert(res.data.message);
+            clearFields();
             setStater('error', null);
           } else {
             setStater('error', res.data.message);
@@ -222,7 +243,13 @@ const AddMember = () => {
     <SafeAreaView style={styles.container}>
       <Spinner visible={spin} />
       <View style={styles.titleContaner}>
-        <Text style={styles.title}>{'Дэмжигч нэмэх'.toUpperCase()}</Text>
+        <Text style={styles.title}>
+          {state.userRole === 'Admin' ||
+          state.userRole === 'Super admin' ||
+          state.userRole === 'Гишүүн'
+            ? 'НЭМЭХ'
+            : 'ДЭМЖИГЧ НЭМЭХ'}
+        </Text>
         <View style={styles.underLine} />
       </View>
       <ScrollView
@@ -247,28 +274,35 @@ const AddMember = () => {
           )}
         </TouchableOpacity>
         <ErrorMessage />
-        <View style={styles.item}>
-          {state.userRole === 'Admin' || state.userRole === 'Super admin' ? (
+
+        {(state.userRole === 'Super admin' ||
+          state.userRole === 'Admin' ||
+          state.userRole === 'Гишүүн') && (
+          <View style={styles.item}>
             <Picker
               title="Төлөв сонгох"
-              type="tolow"
+              type={state.userRole == 'Гишүүн' ? 'gish' : 'tolow'}
               selectedValue={tolow}
               onValueChange={(e) => {
                 setTolow(e);
               }}
             />
-          ) : (
-            <Picker
-              title="Нэр дэвшигч сонгох"
-              type="candidates"
-              candidates={state.candidates}
-              selectedValue={candidate}
-              onValueChange={(e) => {
-                setCandidate(e);
-              }}
-            />
-          )}
-        </View>
+          </View>
+        )}
+        {state.userRole != 'Admin' ||
+          (state.userRole != 'Super admin' && (
+            <View style={styles.item}>
+              <Picker
+                title="Нэр дэвшигч сонгох"
+                type="candidates"
+                candidates={state.candidates}
+                selectedValue={candidate}
+                onValueChange={(e) => {
+                  setCandidate(e);
+                }}
+              />
+            </View>
+          ))}
         <View style={[styles.item, detect.phone && styles.danger]}>
           <Input
             onChange={(val) => setPhone1(val)}
@@ -356,6 +390,10 @@ const AddMember = () => {
             onClick={
               state.userRole === 'Admin' || state.userRole === 'Super admin'
                 ? Save1
+                : state.userRole === 'Гишүүн'
+                ? tolow.roleName === 'Дэмжигч'
+                  ? Save
+                  : Save1
                 : Save
             }
           />

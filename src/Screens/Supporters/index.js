@@ -24,7 +24,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Supporters = (props) => {
-  const [reRender, setReRender] = useState(1);
+  // const [reRender, setReRender] = useState(1);
   const isMountedRef = useRef(null);
   const [humans, setHumans] = useState([]);
   const [result, setResult] = useState([]);

@@ -9,6 +9,7 @@ const UserStore = (props) => {
   const [rem, setRem] = useState('had');
   const [state, setState] = useState({
     userRole: null,
+    userRole: 'Admin',
     token: null,
     candidateId: null,
     userId: null,
@@ -73,18 +74,35 @@ const UserStore = (props) => {
     }
   };
 
-  const getCandidates = (token, committeeId) => {
+  const getCandidates = (token, committeeId, role) => {
     axios.defaults.headers.common = {
       Authorization: `Bearer ${token}`,
     };
-    axios
-      .get(`http://api.minu.mn/election/elUser/candidates/${committeeId}`)
-      .then((res) => {
-        if (res.data.message === 'Амжилттай') {
-          setStater('candidates', res.data.entity);
-        }
-      })
-      .catch((e) => console.log('Ner devshigchine get hiih uyin aldaa: ', e));
+    if (role == 1 || role == 2) {
+      axios
+        .get(`http://api.minu.mn/election/elUser/candidates?committeeId=`)
+        .then((res) => {
+          // console.log('kkkkkk', res.data.entity);
+          if (res.data.message === 'Амжилттай') {
+            setStater('candidates', res.data.entity);
+          }
+        })
+        .catch((e) =>
+          console.log('Admin Ner devshigchine get hiih uyin aldaa: ', e),
+        );
+    } else {
+      axios
+        .get(
+          `http://api.minu.mn/election/elUser/candidates?committeeId=${committeeId}`,
+        )
+        .then((res) => {
+          // console.log('gggggggg', res.data.entity);
+          if (res.data.message === 'Амжилттай') {
+            setStater('candidates', res.data.entity);
+          }
+        })
+        .catch((e) => console.log('Ner devshigchine get hiih uyin aldaa: ', e));
+    }
   };
 
   const auth = useMemo(
@@ -106,6 +124,7 @@ const UserStore = (props) => {
                 res.data.entity.elCandidate === null
                   ? res.data.entity.committeeId
                   : res.data.entity.elCandidate.committeeId,
+                res.data.entity.roleId,
               );
               console.log(res.data.message + 'Nevterlee');
               setStater('token', res.data.token);
