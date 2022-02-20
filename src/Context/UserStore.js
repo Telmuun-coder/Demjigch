@@ -20,6 +20,11 @@ const UserStore = (props) => {
   });
 
   const setStater = (valName, val) => {
+  	
+  	// const tmpState = {...state};
+  	// tmpState[valName] = valName;
+  	// setState(tmpState);
+
     switch (valName) {
       case 'token':
         setState((prev) => ({

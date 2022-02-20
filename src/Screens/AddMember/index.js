@@ -149,7 +149,9 @@ const AddMember = () => {
       if (
         data.elPromoter[property] === '' &&
         property != 'phone2' &&
-        property != 'imgPath'
+        property != 'imgPath' &&
+        property != 'facebookName' &&
+        property != 'email'
       ) {
         console.log(property);
         tmp[property] = true;
@@ -205,7 +207,9 @@ const AddMember = () => {
       if (
         data[property] === '' &&
         property != 'phone2' &&
-        property != 'imgPath'
+        property != 'imgPath' &&
+        property != 'facebookName' &&
+        property != 'email'
       ) {
         tmp[property] = true;
         ok = false;
